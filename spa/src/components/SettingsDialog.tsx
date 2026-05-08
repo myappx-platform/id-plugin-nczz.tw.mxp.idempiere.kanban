@@ -113,8 +113,8 @@ export function SettingsDialog({ onClose, onSaved, onError }: Props) {
   ] as const;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-xl w-[600px] max-w-[90vw] max-h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50" onClick={onClose}>
+      <div className="bg-white rounded-t-lg sm:rounded-lg shadow-xl w-full sm:w-[600px] sm:max-w-[90vw] max-h-[95vh] sm:max-h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
         <div className="text-sm font-semibold text-gray-700 p-4 pb-0">{t('KanbanSettings')}</div>
         <div className="flex border-b px-4 mt-2">
           {tabs.map((tb) => (

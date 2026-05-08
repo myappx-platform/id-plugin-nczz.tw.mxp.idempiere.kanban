@@ -58,10 +58,11 @@ export function NewCardDialog({ init, requestTypeId: activeRtId, orgId: filterOr
     setErp((prev) => ({ ...prev, [key]: id }));
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-xl w-[520px] max-w-[90vw] max-h-[85vh] overflow-y-auto p-5" onClick={(e) => e.stopPropagation()}>
-        <div className="text-sm font-semibold text-gray-700 mb-3">{t("KanbanNewRequest")}</div>
-        <form onSubmit={handleSubmit} className="space-y-3">
+    <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 touch-none" onClick={onClose}
+      onTouchMove={(e) => e.preventDefault()}>
+      <div className="bg-white rounded-t-lg sm:rounded-lg shadow-xl w-full sm:w-[520px] sm:max-w-[90vw] h-[92dvh] sm:h-auto sm:max-h-[85vh] p-4 sm:p-5 flex flex-col overflow-hidden touch-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="text-sm font-semibold text-gray-700 mb-3 flex-shrink-0">{t("KanbanNewRequest")}</div>
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto min-h-0 overscroll-contain space-y-3 overflow-x-hidden">
           <div>
             <label className="text-xs text-gray-500">{t("KanbanSummary")} *</label>
             <input value={summary} onChange={(e) => setSummary(e.target.value)}
@@ -81,7 +82,7 @@ export function NewCardDialog({ init, requestTypeId: activeRtId, orgId: filterOr
               </select>
             </div>
           )}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
             <div>
               <label className="text-xs text-gray-500">{t("KanbanRequestType")}</label>
               <select value={requestTypeId} onChange={(e) => { setRequestTypeId(e.target.value); setStatusId(''); }}
@@ -110,16 +111,16 @@ export function NewCardDialog({ init, requestTypeId: activeRtId, orgId: filterOr
                 valueName={init.user.name}
                 onChange={(id) => setSalesRepId(id ? String(id) : '')} />
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="text-xs text-gray-500">{t("KanbanDateNextAction")}</label>
               <input type="datetime-local" value={dateNextAction} onChange={(e) => setDateNextAction(e.target.value)}
-                className="w-full border rounded px-2 py-1.5 text-sm mt-0.5" />
+                className="w-full max-w-full border rounded px-2 py-1.5 text-sm mt-0.5" />
             </div>
           </div>
 
           {/* ERP Links */}
           <div className="text-xs font-semibold text-gray-500 mt-1">ERP Links</div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
             <SearchSelect table="C_BPartner" label={t("KanbanBusinessPartner")} value={erp.bpartnerId} onChange={setFk('bpartnerId')} />
             <SearchSelect table="M_Product" label={t("KanbanProduct")} value={erp.productId} onChange={setFk('productId')} />
             <SearchSelect table="C_Project" label={t("KanbanProject")} value={erp.projectId} onChange={setFk('projectId')} />

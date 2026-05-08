@@ -91,7 +91,7 @@ function KanbanApp() {
   return (
     <div className="h-screen flex flex-col bg-gray-100">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 px-4 py-2 bg-white border-b border-gray-200">
+      <div className="flex flex-wrap items-center gap-2 px-3 py-2 bg-white border-b border-gray-200 sm:gap-3 sm:px-4">
         <ScopeFilter
           scope={scope} onScopeChange={setScope}
           requestTypes={init.requestTypes}
@@ -99,15 +99,15 @@ function KanbanApp() {
         />
         {init.orgs && init.orgs.length > 1 && (
           <select value={orgId || ''} onChange={(e) => setOrgId(e.target.value ? Number(e.target.value) : undefined)}
-            className="text-xs border border-gray-300 rounded px-2 py-1">
+            className="text-xs border border-gray-300 rounded px-2 py-1.5 h-9">
             <option value="">{t('KanbanAll')} Org</option>
             {init.orgs.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
           </select>
         )}
-        <div className="flex-1" />
+        <div className="flex-1 basis-0 min-w-[2rem] sm:min-w-0" />
         {view === 'kanban' && (
           <select value={groupBy} onChange={(e) => setGroupBy(e.target.value as typeof groupBy)}
-            className="text-xs border border-gray-300 rounded px-2 py-1">
+            className="text-xs border border-gray-300 rounded px-2 py-1.5 h-9">
             <option value="none">{t('KanbanGroupBy')}: {t('KanbanGroupNone')}</option>
             <option value="project">{t('KanbanGroupProject')}</option>
             <option value="salesRep">{t('KanbanGroupSalesRep')}</option>
@@ -116,34 +116,34 @@ function KanbanApp() {
           </select>
         )}
         <button onClick={() => setShowClosed(!showClosed)}
-          className={`text-xs px-3 py-1 rounded ${showClosed ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+          className={`text-xs px-3 py-1.5 rounded whitespace-nowrap h-9 ${showClosed ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
           {showClosed ? t('KanbanClosed') : t('KanbanOpen')}
         </button>
-        <div className="flex gap-1 border rounded overflow-hidden">
+        <div className="flex gap-1 border rounded overflow-hidden flex-shrink-0 h-9">
           <button onClick={() => setView('kanban')}
-            className={`text-xs px-2 py-1 ${view === 'kanban' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'}`}>
+            className={`text-xs px-2 ${view === 'kanban' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'}`}>
             {t('KanbanViewBoard')}
           </button>
           <button onClick={() => setView('gantt')}
-            className={`text-xs px-2 py-1 ${view === 'gantt' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'}`}>
+            className={`text-xs px-2 ${view === 'gantt' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'}`}>
             {t('KanbanViewGantt')}
           </button>
           <button onClick={() => setView('metrics')}
-            className={`text-xs px-2 py-1 ${view === 'metrics' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'}`}>
+            className={`text-xs px-2 ${view === 'metrics' ? 'bg-blue-500 text-white' : 'bg-white text-gray-600'}`}>
             {t('KanbanViewMetrics')}
           </button>
         </div>
         <input
           type="text" placeholder={t('KanbanSearch')} value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="text-sm border border-gray-300 rounded px-2 py-1 w-48"
+          className="text-sm border border-gray-300 rounded px-2 py-1.5 w-28 sm:w-48 h-9"
         />
         <button onClick={() => setShowNewCard(true)}
-          className="text-sm bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
-          {t('KanbanNew')}
+          className="text-sm bg-green-500 text-white px-3 rounded hover:bg-green-600 whitespace-nowrap h-9">
+          + {t('KanbanNew')}
         </button>
         <button onClick={() => setShowSettings(true)}
-          className="text-sm bg-gray-200 text-gray-600 px-2 py-1 rounded hover:bg-gray-300" title={t('KanbanSettings')}>
+          className="text-sm bg-gray-200 text-gray-600 px-2 rounded hover:bg-gray-300 h-9" title={t('KanbanSettings')}>
           ⚙️
         </button>
       </div>

@@ -102,40 +102,42 @@ export function CardDetail({ cardId, init, onClose, onError }: Props) {
 
   return (
     <Modal onClose={onClose}>
-      <div className="max-h-[80vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 font-mono">{card.documentNo}</span>
-            {card.priority && (
-              <span className={`text-xs text-white px-1.5 py-0.5 rounded ${priorityColor(card.priority)}`}>
-                {priorityLabel(card.priority)}
-              </span>
-            )}
-            {card.isEscalated && <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded">{t("KanbanEscalated")}</span>}
-          </div>
-          <div className="flex gap-2">
-            <button onClick={async () => {
-              await kanbanFetch(`/cards/${cardId}/${card.isWatching ? '' : ''}watch`, {
-                method: card.isWatching ? 'DELETE' : 'POST',
-              });
-              queryClient.invalidateQueries({ queryKey: ['card', cardId] });
-            }} className={`text-xs px-2 py-1 rounded ${card.isWatching ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-blue-100'}`}>
-              👁 {card.isWatching ? t('KanbanUnwatch') : t('KanbanWatch')}
-            </button>
-            <button onClick={() => updateCard.mutate({ id: cardId, isEscalated: !card.isEscalated })}
-              className={`text-xs px-2 py-1 rounded ${card.isEscalated ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-red-100'}`}>
-              🚫 {card.isEscalated ? t('KanbanUnblock') : t('KanbanBlock')}
-            </button>
-            {!editing && <button onClick={startEdit} className="text-xs bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">{t("KanbanEdit")}</button>}
-            {editing && <button onClick={saveEdit} disabled={updateCard.isPending} className="text-xs bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 disabled:opacity-50">{updateCard.isPending ? t('KanbanSaving') : t('KanbanSave')}</button>}
-            {editing && <button onClick={() => setEditing(false)} className="text-xs bg-gray-300 text-gray-700 px-3 py-1 rounded">{t("KanbanCancel")}</button>}
-          </div>
+      {/* Header — fixed outside scroll */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-3 border-b border-gray-100 flex-shrink-0">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-400 font-mono">{card.documentNo}</span>
+          {card.priority && (
+            <span className={`text-xs text-white px-1.5 py-0.5 rounded ${priorityColor(card.priority)}`}>
+              {priorityLabel(card.priority)}
+            </span>
+          )}
+          {card.isEscalated && <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded">{t("KanbanEscalated")}</span>}
         </div>
+        <div className="flex flex-wrap gap-2">
+          <button onClick={async () => {
+            await kanbanFetch(`/cards/${cardId}/${card.isWatching ? '' : ''}watch`, {
+              method: card.isWatching ? 'DELETE' : 'POST',
+            });
+            queryClient.invalidateQueries({ queryKey: ['card', cardId] });
+          }} className={`text-xs px-2 py-1.5 rounded h-8 ${card.isWatching ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-blue-100'}`}>
+            👁 {card.isWatching ? t('KanbanUnwatch') : t('KanbanWatch')}
+          </button>
+          <button onClick={() => updateCard.mutate({ id: cardId, isEscalated: !card.isEscalated })}
+            className={`text-xs px-2 py-1.5 rounded h-8 ${card.isEscalated ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-red-100'}`}>
+            🚫 {card.isEscalated ? t('KanbanUnblock') : t('KanbanBlock')}
+          </button>
+          {!editing && <button onClick={startEdit} className="text-xs bg-blue-500 text-white px-3 py-1.5 rounded h-8 hover:bg-blue-600">{t("KanbanEdit")}</button>}
+          {editing && <button onClick={saveEdit} disabled={updateCard.isPending} className="text-xs bg-green-500 text-white px-3 py-1.5 rounded h-8 hover:bg-green-600 disabled:opacity-50">{updateCard.isPending ? t('KanbanSaving') : t('KanbanSave')}</button>}
+          {editing && <button onClick={() => setEditing(false)} className="text-xs bg-gray-300 text-gray-700 px-3 py-1.5 rounded h-8">{t("KanbanCancel")}</button>}
+        </div>
+      </div>
+
+      {/* Content — scrollable */}
+      <div className="flex-1 overflow-y-auto min-h-0 pt-3 overscroll-contain">
 
         {editing ? (
           /* ===== EDIT MODE ===== */
-          <div className="space-y-3 mb-4">
+          <div className="space-y-3 mb-4 overflow-x-hidden">
             <div>
               <label className="text-xs text-gray-500">{t("KanbanSummary")}</label>
               <input value={form.summary as string} onChange={set('summary')} className="w-full border rounded px-2 py-1 text-sm mt-0.5" />
@@ -144,8 +146,8 @@ export function CardDetail({ cardId, init, onClose, onError }: Props) {
               <label className="text-xs text-gray-500">{t("KanbanNotesResult")}</label>
               <textarea value={form.result as string} onChange={set('result')} className="w-full border rounded px-2 py-1 text-sm mt-0.5 h-20" />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
+              <div className="min-w-0">
                 <label className="text-xs text-gray-500">{t("KanbanPriority")}</label>
                 <select value={form.priority as string} onChange={set('priority')} className="w-full border rounded px-2 py-1 text-sm mt-0.5">
                   {init.priorities.map((p) => <option key={p.value} value={p.value}>{p.name}</option>)}
@@ -181,22 +183,22 @@ export function CardDetail({ cardId, init, onClose, onError }: Props) {
                   {init.requestTypes.map((rt) => <option key={rt.id} value={rt.id}>{rt.name}</option>)}
                 </select>
               </div>
-              <div className="col-span-2">
+              <div className="sm:col-span-2 min-w-0">
                 <label className="text-xs text-gray-500">{t("KanbanDateNextAction")}</label>
-                <input type="datetime-local" value={form.dateNextAction as string} onChange={set('dateNextAction')} className="w-full border rounded px-2 py-1 text-sm mt-0.5" />
+                <input type="datetime-local" value={form.dateNextAction as string} onChange={set('dateNextAction')} className="w-full max-w-full border rounded px-2 py-1 text-sm mt-0.5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <label className="text-xs text-gray-500">{t("KanbanStartDate")}</label>
-                <input type="datetime-local" value={form.startDate as string} onChange={set('startDate')} className="w-full border rounded px-2 py-1 text-sm mt-0.5" />
+                <input type="datetime-local" value={form.startDate as string} onChange={set('startDate')} className="w-full max-w-full border rounded px-2 py-1 text-sm mt-0.5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <label className="text-xs text-gray-500">{t("KanbanEndTime")}</label>
-                <input type="datetime-local" value={form.endTime as string} onChange={set('endTime')} className="w-full border rounded px-2 py-1 text-sm mt-0.5" />
+                <input type="datetime-local" value={form.endTime as string} onChange={set('endTime')} className="w-full max-w-full border rounded px-2 py-1 text-sm mt-0.5" />
               </div>
             </div>
             {/* ERP Links (edit) */}
             <div className="text-xs font-semibold text-gray-500 mt-3 mb-1">ERP Links</div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <SearchSelect table="C_BPartner" label={t("KanbanBusinessPartner")}
                 value={form.bpartnerId as number | undefined} valueName={form.bpartnerName as string}
                 onChange={(id, name) => setForm((f) => ({ ...f, bpartnerId: id, bpartnerName: name }))} />
@@ -234,7 +236,7 @@ export function CardDetail({ cardId, init, onClose, onError }: Props) {
             <div className="text-sm text-gray-600 bg-gray-50 rounded p-2 min-h-[2rem] whitespace-pre-wrap mb-3">
               {card.result || <span className="text-gray-300 italic">{t('KanbanNoNotes')}</span>}
             </div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs mb-3">
               <Field label={t("KanbanStatus")} value={card.statusName} />
               <Field label={t("KanbanRequestType")} value={card.requestTypeName} />
               <Field label={t("KanbanPriority")} value={priorityLabel(card.priority)} />
@@ -368,8 +370,9 @@ export function CardDetail({ cardId, init, onClose, onError }: Props) {
 
 function Modal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-xl w-[600px] max-w-[90vw] p-5" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 touch-none" onClick={onClose}
+      onTouchMove={(e) => e.preventDefault()}>
+      <div className="bg-white rounded-t-lg sm:rounded-lg shadow-xl w-full sm:w-[600px] sm:max-w-[90vw] h-[92dvh] sm:h-auto sm:max-h-[80vh] p-4 sm:p-5 flex flex-col overflow-hidden touch-auto" onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>

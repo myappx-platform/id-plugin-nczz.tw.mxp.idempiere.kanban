@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16
+    platform: linux/arm64
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - idempiere_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  idempiere:
+    image: idempiereofficial/idempiere:12-release
+    platform: linux/amd64
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=idempiere
+      - DB_USER=adempiere
+      - DB_PASS=adempiere
+      - DB_ADMIN_PASS=postgres
+    volumes:
+      - idempiere_config:/opt/idempiere/configuration
+      - idempiere_plugins:/opt/idempiere/plugins
+    ports:
+      - "18080:8080"
+      - "18443:8443"
+
+volumes:
+  idempiere_data:
+  idempiere_config:
+  idempiere_plugins:

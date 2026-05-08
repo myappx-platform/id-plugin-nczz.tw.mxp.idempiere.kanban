@@ -16,7 +16,7 @@ export function KanbanColumn({ status, cards, onCardClick, wipLimit }: {
 
   return (
     <div ref={setNodeRef}
-      className={`flex-shrink-0 w-72 rounded-lg flex flex-col max-h-full transition-colors ${
+      className={`flex-shrink-0 w-[75vw] sm:w-64 md:w-72 rounded-lg flex flex-col max-h-full transition-colors ${
         isOver && atLimit ? 'bg-red-50 ring-2 ring-red-300' :
         isOver ? 'bg-blue-50 ring-2 ring-blue-300' :
         atLimit ? 'bg-red-50' :
@@ -53,7 +53,7 @@ function DraggableCard({ card, onClick }: { card: Card; onClick: () => void }) {
     opacity: isDragging ? 0.3 : 1,
   };
   return (
-    <div ref={(node) => { setDragRef(node); setDropRef(node); }} style={style} {...listeners} {...attributes} onClick={onClick}>
+    <div ref={(node) => { setDragRef(node); setDropRef(node); }} style={style} {...listeners} {...attributes} onClick={onClick} data-dnd-draggable>
       <KanbanCard card={card} />
     </div>
   );

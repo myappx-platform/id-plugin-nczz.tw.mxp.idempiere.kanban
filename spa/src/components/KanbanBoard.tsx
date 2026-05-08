@@ -1,7 +1,7 @@
 import { t } from '../i18n';
 import { useState, useMemo } from 'react';
 import {
-  DndContext, DragOverlay, closestCorners, PointerSensor,
+  DndContext, DragOverlay, closestCorners, PointerSensor, TouchSensor, KeyboardSensor,
   useSensor, useSensors, type DragEndEvent,
 } from '@dnd-kit/core';
 import { KanbanColumn } from './KanbanColumn';
@@ -51,7 +51,11 @@ function SwimlaneRow({ label, statuses, cards, allCards, onError, onCardClick, w
   const moveCard = useMoveCard();
   const reorderCards = useReorderCards();
   const [activeCard, setActiveCard] = useState<Card | null>(null);
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+    useSensor(KeyboardSensor)
+  );
 
   // Global counts for WIP (across all swimlanes)
   const globalStatusCounts = useMemo(() => {

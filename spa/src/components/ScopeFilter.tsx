@@ -19,13 +19,13 @@ export function ScopeFilter({ scope, onScopeChange, requestTypes, requestTypeId,
       <div className="flex gap-1">
         {SCOPES.map((s) => (
           <button key={s.key} onClick={() => onScopeChange(s.key)}
-            className={`px-3 py-1 text-sm rounded ${scope === s.key ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded h-9 ${scope === s.key ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
             {t(s.msgKey)}
           </button>
         ))}
       </div>
       <select value={requestTypeId ?? ''} onChange={(e) => onRequestTypeChange(e.target.value ? Number(e.target.value) : undefined)}
-        className="text-sm border border-gray-300 rounded px-2 py-1">
+        className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1.5 h-9">
         {requestTypes.map((rt) => <option key={rt.id} value={rt.id}>{rt.name}</option>)}
       </select>
     </>

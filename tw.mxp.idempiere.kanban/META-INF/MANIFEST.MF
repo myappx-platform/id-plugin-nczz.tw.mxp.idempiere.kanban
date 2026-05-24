@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: iDempiere Plugin : nczz.tw.mxp.idempiere.kanban
 Bundle-SymbolicName: nczz.tw.mxp.idempiere.kanban;singleton:=true
 Bundle-Version: 14.0.0.qualifier
-Bundle-Vendor: Ken Longnan <ken.longnan@gmail.com>
+Bundle-Vendor: tw.idempiere; Ken Longnan <ken.longnan@gmail.com>
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: tw.mxp.idempiere.kanban.KanbanActivator
 Web-ContextPath: kanban

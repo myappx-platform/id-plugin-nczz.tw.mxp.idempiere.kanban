@@ -96,7 +96,7 @@ UPDATE AD_Message_Trl SET MsgText='— 無 —', IsTranslated='Y' WHERE AD_Langu
 
 -- AD_Menu 翻譯
 UPDATE AD_Menu_Trl SET Name='需求看板', Description='iDempiere 需求工單看板管理', IsTranslated='Y'
-WHERE AD_Language='zh_TW' AND AD_Menu_ID=(SELECT AD_Menu_ID FROM AD_Menu WHERE AD_Menu_UU='tw-mxp-idempiere-kanban-menu-001');
+WHERE AD_Language='zh_TW' AND AD_Menu_ID=(SELECT AD_Menu_ID FROM AD_Menu WHERE AD_Menu_UU='019e5581-0377-7eea-bdae-4d2f2b9627a9');
 
 -- AD_Form 翻譯
 UPDATE AD_Form_Trl SET Name='需求看板', Description='iDempiere 需求工單看板管理', IsTranslated='Y'

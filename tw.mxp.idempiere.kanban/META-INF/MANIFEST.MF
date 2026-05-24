@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: iDempiere Request Kanban Board
-Bundle-SymbolicName: tw.mxp.idempiere.kanban;singleton:=true
+Bundle-Name: iDempiere Plugin : nczz.tw.mxp.idempiere.kanban
+Bundle-SymbolicName: nczz.tw.mxp.idempiere.kanban;singleton:=true
 Bundle-Version: 14.0.0.qualifier
-Bundle-Vendor: tw.idempiere
+Bundle-Vendor: Ken Longnan <ken.longnan@gmail.com>
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: tw.mxp.idempiere.kanban.KanbanActivator
 Web-ContextPath: kanban
 Jetty-Environment: ee8
@@ -34,4 +35,4 @@ Import-Package: com.google.gson,
  org.zkoss.zk.ui.util,
  org.zkoss.zul
 Service-Component: OSGI-INF/*.xml
-Automatic-Module-Name: tw.mxp.idempiere.kanban
+Automatic-Module-Name: nczz.tw.mxp.idempiere.kanban

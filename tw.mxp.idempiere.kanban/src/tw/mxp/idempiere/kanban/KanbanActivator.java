@@ -15,8 +15,9 @@ import org.osgi.framework.BundleContext;
 public class KanbanActivator extends Incremental2PackActivator {
 
 	private static final CLogger log = CLogger.getCLogger(KanbanActivator.class);
-	private static final String FORM_UU = "tw-mxp-idempiere-kanban-form-001";
-	private static final String MENU_UU = "tw-mxp-idempiere-kanban-menu-001";
+	private static final Object MIGRATION_LOCK = new Object();
+	private static final String FORM_UU = "019e5580-cd5f-7cd6-b681-d0ba082d5adf";
+	private static final String MENU_UU = "019e5581-0377-7eea-bdae-4d2f2b9627a9";
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -40,6 +41,12 @@ public class KanbanActivator extends Incremental2PackActivator {
 
 	/** Also called from ServerStateChange if afterPackIn was skipped */
 	private void runMigrations() {
+		synchronized (MIGRATION_LOCK) {
+			runMigrationsInternal();
+		}
+	}
+
+	private void runMigrationsInternal() {
 		try {
 			if (!isMigrationApplied("1.0.0")) {
 				ensureTables();
@@ -253,7 +260,7 @@ public class KanbanActivator extends Incremental2PackActivator {
 	}
 
 	private void ensureReminderScheduler() {
-		String processUU = "tw-mxp-idempiere-kanban-reminder-001";
+		String processUU = "019e558c-4e5a-7f76-8d70-8c8f3d83949f";
 
 		// AD_Process
 		int procId = DB.getSQLValueEx(null, "SELECT AD_Process_ID FROM AD_Process WHERE AD_Process_UU=?", processUU);
@@ -400,9 +407,13 @@ public class KanbanActivator extends Incremental2PackActivator {
 		for (String[] m : msgs) {
 			if (DB.getSQLValueEx(null, "SELECT COUNT(*) FROM AD_Message WHERE Value=?", m[0]) > 0) continue;
 			int id = DB.getNextID(0, "AD_Message", null);
-			DB.executeUpdateEx("INSERT INTO AD_Message (AD_Message_ID,AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,"
+			// Atomic insert: safe when start() and afterPackIn() run migrations concurrently
+			int inserted = DB.executeUpdateEx("INSERT INTO AD_Message (AD_Message_ID,AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,"
 				+ "Updated,UpdatedBy,Value,MsgText,MsgType,EntityType,AD_Message_UU) "
-				+ "VALUES (?,0,0,'Y',now(),0,now(),0,?,?,'I','U',generate_uuid())", new Object[]{id, m[0], m[1]}, null);
+				+ "SELECT ?,0,0,'Y',now(),0,now(),0,?,?,'I','U',generate_uuid() "
+				+ "WHERE NOT EXISTS (SELECT 1 FROM AD_Message WHERE Value=?)",
+				new Object[]{id, m[0], m[1], m[0]}, null);
+			if (inserted == 0) continue;
 			DB.executeUpdate("INSERT INTO AD_Message_Trl (AD_Message_ID,AD_Language,AD_Client_ID,AD_Org_ID,IsActive,"
 				+ "Created,CreatedBy,Updated,UpdatedBy,MsgText,MsgTip,IsTranslated,AD_Message_Trl_UU) "
 				+ "SELECT "+id+",l.AD_Language,0,0,'Y',now(),0,now(),0,'"+m[1].replace("'","''")+"',NULL,'N',generate_uuid() "

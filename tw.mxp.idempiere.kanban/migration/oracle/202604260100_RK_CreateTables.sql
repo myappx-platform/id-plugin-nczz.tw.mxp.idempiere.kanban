@@ -112,9 +112,9 @@ INSERT INTO AD_Form (AD_Form_ID, AD_Client_ID, AD_Org_ID, IsActive, Created, Cre
 SELECT AD_Sequence_SQ.NEXTVAL, 0, 0, 'Y', SYSDATE, 100,
     SYSDATE, 100, 'Request Kanban', 'Kanban board for request management',
     'tw.mxp.idempiere.kanban.KanbanFormController', '3',
-    'N', 'U', 'tw-idempiere-kanban-form-001'
+    'N', 'U', '019e5580-cd5f-7cd6-b681-d0ba082d5adf'
 FROM dual
-WHERE NOT EXISTS (SELECT 1 FROM AD_Form WHERE AD_Form_UU = 'tw-idempiere-kanban-form-001');
+WHERE NOT EXISTS (SELECT 1 FROM AD_Form WHERE AD_Form_UU = '019e5580-cd5f-7cd6-b681-d0ba082d5adf');
 
 -- AD_Form_Trl
 INSERT INTO AD_Form_Trl (AD_Form_ID, AD_Language, AD_Client_ID, AD_Org_ID, IsActive,
@@ -123,7 +123,7 @@ SELECT f.AD_Form_ID, l.AD_Language, 0, 0, 'Y',
     SYSDATE, 100, SYSDATE, 100,
     f.Name, f.Description, f.Help, 'N', generate_uuid()
 FROM AD_Form f, AD_Language l
-WHERE f.AD_Form_UU = 'tw-idempiere-kanban-form-001'
+WHERE f.AD_Form_UU = '019e5580-cd5f-7cd6-b681-d0ba082d5adf'
   AND l.IsActive = 'Y' AND l.IsSystemLanguage = 'Y' AND l.IsBaseLanguage = 'N'
   AND NOT EXISTS (SELECT 1 FROM AD_Form_Trl t
                   WHERE t.AD_Form_ID = f.AD_Form_ID AND t.AD_Language = l.AD_Language);
@@ -139,7 +139,7 @@ SELECT AD_Sequence_SQ.NEXTVAL, 0, 0, 'Y', SYSDATE, 100,
     'N', 'N', 'N',
     'X', f.AD_Form_ID, 'U', 'tw-idempiere-kanban-menu-001'
 FROM AD_Form f
-WHERE f.AD_Form_UU = 'tw-idempiere-kanban-form-001'
+WHERE f.AD_Form_UU = '019e5580-cd5f-7cd6-b681-d0ba082d5adf'
   AND NOT EXISTS (SELECT 1 FROM AD_Menu WHERE AD_Menu_UU = 'tw-idempiere-kanban-menu-001');
 
 -- AD_Menu_Trl
@@ -176,7 +176,7 @@ SELECT f.AD_Form_ID, r.AD_Role_ID, r.AD_Client_ID, 0, 'Y',
     SYSDATE, 100, SYSDATE, 100,
     'Y', generate_uuid()
 FROM AD_Form f, AD_Role r
-WHERE f.AD_Form_UU = 'tw-idempiere-kanban-form-001'
+WHERE f.AD_Form_UU = '019e5580-cd5f-7cd6-b681-d0ba082d5adf'
   AND r.IsActive = 'Y'
   AND NOT EXISTS (SELECT 1 FROM AD_Form_Access a
                   WHERE a.AD_Form_ID = f.AD_Form_ID AND a.AD_Role_ID = r.AD_Role_ID);
